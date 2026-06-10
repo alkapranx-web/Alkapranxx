@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kuis MPP Farmasi</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Poppins:wght@400;500;600;700&display=swap');
+
+  :root {
+    --hijau: #2ecc71;
+    --hijau-tua: #27ae60;
+    --biru: #3498db;
+    --biru-tua: #2980b9;
+    --merah: #e74c3c;
+    --kuning: #f39c12;
+    --ungu: #8e44ad;
+    --bg: #f0f4f8;
+    --putih: #ffffff;
+    --abu: #636e72;
+    --gelap: #2d3436;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #e0f7fa 0%, #e8f5e9 50%, #e3f2fd 100%);
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .app {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  /* HEADER */
+  .header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .header .badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #27ae60, #2980b9);
+    color: white;
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .header h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--gelap);
+  }
+  .header p {
+    color: var(--abu);
+    font-size: 14px;
+    margin-top: 5px;
+  }
+
+  /* PROGRESS */
+  .progress-container {
+    background: white;
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .progress-info {
+    flex-shrink: 0;
+    font-weight: 800;
+    font-size: 18px;
+    color: var(--gelap);
+  }
+  .progress-bar-wrap {
+    flex: 1;
+    background: #e9ecef;
+    border-radius: 10px;
+    height: 10px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #27ae60, #2980b9);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+  }
+  .score-badge {
+    flex-shrink: 0;
+    background: linear-gradient(135deg, var(--kuning), #e67e22);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  /* TOPIC LABEL */
+  .topic-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #8e44ad, #3498db);
+    color: white;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+  }
+
+  /* CARD */
+  .card {
+    background: white;
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 16px;
+    animation: slideIn 0.4s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .question-number {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--abu);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .question-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--gelap);
+    line-height: 1.6;
+    margin-bottom: 22px;
+  }
+
+  /* OPTIONS */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option-btn {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    background: #f8f9fa;
+    text-align: left;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--gelap);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--biru);
+    background: #ebf5fb;
+    transform: translateX(4px);
+  }
+  .option-letter {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 800;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .option-btn.correct {
+    border-color: var(--hijau);
+    background: #eafaf1;
+  }
+  .option-btn.correct .option-letter {
+    background: var(--hijau);
+    color: white;
+  }
+  .option-btn.wrong {
+    border-color: var(--merah);
+    background: #fdedec;
+  }
+  .option-btn.wrong .option-letter {
+    background: var(--merah);
+    color: white;
+  }
+  .option-btn:disabled { cursor: default; }
+
+  /* EXPLANATION */
+  .explanation {
+    margin-top: 18px;
+    padding: 16px 18px;
+    border-radius: 12px;
+    border-left: 4px solid;
+    font-size: 14px;
+    line-height: 1.7;
+    display: none;
+  }
+  .explanation.correct {
+    background: #eafaf1;
+    border-color: var(--hijau);
+    color: #1a6b3a;
+    display: block;
+  }
+  .explanation.wrong {
+    background: #fdedec;
+    border-color: var(--merah);
+    color: #922b21;
+    display: block;
+  }
+  .explanation strong { font-weight: 800; }
+
+  /* FACT BOX */
+  .fact-box {
+    margin-top: 14px;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, #eaf2ff, #f0f0ff);
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #2c3e50;
+    display: none;
+    border: 1px solid #d4e6f1;
+  }
+  .fact-box.show { display: block; }
+  .fact-box .fact-title {
+    font-weight: 800;
+    color: var(--ungu);
+    margin-bottom: 4px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* NEXT BUTTON */
+  .next-btn {
+    width: 100%;
+    margin-top: 18px;
+    padding: 15px;
+    background: linear-gradient(135deg, #27ae60, #2980b9);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: none;
+  }
+  .next-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(39,174,96,0.4); }
+  .next-btn.show { display: block; }
+
+  /* RESULT */
+  .result-card {
+    background: white;
+    border-radius: 24px;
+    padding: 36px 28px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    display: none;
+  }
+  .result-card.show { display: block; animation: slideIn 0.5s ease; }
+  .result-emoji { font-size: 64px; margin-bottom: 16px; }
+  .result-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--gelap);
+    margin-bottom: 8px;
+  }
+  .result-score {
+    font-size: 52px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #27ae60, #2980b9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .result-sub { color: var(--abu); font-size: 15px; margin-top: 8px; }
+  .result-message {
+    margin: 20px 0;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 14px;
+    font-size: 14px;
+    color: var(--gelap);
+    line-height: 1.7;
+  }
+
+  /* REVIEW SECTION */
+  .review-list { text-align: left; margin-top: 16px; }
+  .review-item {
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    border-radius: 10px;
+    font-size: 13px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .review-item.ok { background: #eafaf1; color: #1a6b3a; }
+  .review-item.no { background: #fdedec; color: #922b21; }
+
+  .restart-btn {
+    margin-top: 24px;
+    padding: 14px 32px;
+    background: linear-gradient(135deg, #27ae60, #2980b9);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .restart-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(39,174,96,0.4); }
+
+  /* INTRO */
+  .intro-card {
+    background: white;
+    border-radius: 24px;
+    padding: 32px 28px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+  }
+  .intro-icon { font-size: 56px; margin-bottom: 16px; }
+  .intro-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gelap);
+    margin-bottom: 10px;
+  }
+  .intro-desc { color: var(--abu); font-size: 14px; line-height: 1.7; margin-bottom: 20px; }
+  .topic-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 24px;
+    text-align: left;
+  }
+  .topic-item {
+    background: linear-gradient(135deg, #eaf2ff, #f0fff4);
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gelap);
+    border: 1px solid #d5e8f5;
+  }
+  .topic-item span { font-size: 16px; margin-right: 6px; }
+  .start-btn {
+    padding: 15px 40px;
+    background: linear-gradient(135deg, #27ae60, #2980b9);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+  }
+  .start-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(39,174,96,0.4); }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="badge">📚 MPP Farmasi</div>
+    <h1>Kuis Kesehatan Masyarakat</h1>
+    <p>Belajar sambil bermain — lebih mudah diingat!</p>
+  </div>
+
+  <!-- INTRO -->
+  <div class="intro-card" id="introScreen">
+    <div class="intro-icon">🏥</div>
+    <div class="intro-title">Selamat Datang di Kuis MPP Farmasi!</div>
+    <div class="intro-desc">
+      Ada <strong>20 soal</strong> yang mencakup materi lengkap kisi-kisi ujian kamu. 
+      Setiap jawaban dilengkapi penjelasan agar kamu benar-benar paham, bukan sekadar hafal!
+    </div>
+    <div class="topic-grid">
+      <div class="topic-item"><span>🏘️</span>Posyandu & BKIA</div>
+      <div class="topic-item"><span>👁️</span>Penyakit Mata</div>
+      <div class="topic-item"><span>🦷</span>Kesehatan Gigi & Mulut</div>
+      <div class="topic-item"><span>🏫</span>UKS</div>
+      <div class="topic-item"><span>💊</span>Vitamin A & Imunisasi</div>
+      <div class="topic-item"><span>🤝</span>KB & Kontrasepsi</div>
+    </div>
+    <button class="start-btn" onclick="startQuiz()">🚀 Mulai Kuis Sekarang!</button>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quizScreen" style="display:none">
+    <div class="progress-container">
+      <div class="progress-info" id="progressText">1/20</div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progressFill" style="width:5%"></div>
+      </div>
+      <div class="score-badge">⭐ <span id="scoreText">0</span></div>
+    </div>
+    <div id="questionContainer"></div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="result-card" id="resultScreen">
+    <div class="result-emoji" id="resultEmoji">🎉</div>
+    <div class="result-title" id="resultTitle">Selesai!</div>
+    <div class="result-score" id="resultScore">0/20</div>
+    <div class="result-sub" id="resultSub">Nilai kamu</div>
+    <div class="result-message" id="resultMessage"></div>
+    <div class="review-list" id="reviewList"></div>
+    <button class="restart-btn" onclick="restartQuiz()">🔄 Ulangi Kuis</button>
+  </div>
+
+</div>
+
+<script>
+const questions = [
+  {
+    topic: "🏘️ Posyandu",
+    q: "Apa tujuan utama penyelenggaraan Posyandu?",
+    opts: [
+      "Mempercepat penurunan angka kematian ibu dan bayi serta mempercepat penerimaan norma keluarga kecil bahagia",
+      "Menyediakan obat-obatan gratis untuk masyarakat miskin",
+      "Melatih tenaga medis di daerah terpencil",
+      "Membangun fasilitas kesehatan modern di setiap desa"
+    ],
+    ans: 0,
+    exp: "✅ Benar! Posyandu bertujuan untuk mempercepat penurunan angka kematian ibu dan bayi, serta mempercepat penerimaan Norma Keluarga Kecil Bahagia dan Sejahtera (NKKBS).",
+    fact: "💡 Posyandu adalah singkatan dari Pos Pelayanan Terpadu. Didirikan sejak 1984 dan melayani 5 program utama: KB, KIA, Gizi, Imunisasi, dan Penanggulangan Diare."
+  },
+  {
+    topic: "🏘️ Posyandu",
+    q: "Posyandu diselenggarakan untuk masyarakat dengan menggunakan...",
+    opts: [
+      "Dana pemerintah pusat sepenuhnya",
+      "Pendekatan dari masyarakat oleh masyarakat dan untuk masyarakat (DARI, OLEH, UNTUK masyarakat)",
+      "Tenaga dokter spesialis dari rumah sakit",
+      "Sistem pelayanan berbayar dengan tarif terjangkau"
+    ],
+    ans: 1,
+    exp: "✅ Benar! Posyandu diselenggarakan dengan pendekatan DARI masyarakat, OLEH masyarakat, dan UNTUK masyarakat. Kader Posyandu adalah warga setempat yang terlatih.",
+    fact: "💡 Kader Posyandu adalah relawan sukarela dari masyarakat yang dilatih untuk mengelola Posyandu. Mereka adalah tulang punggung program ini!"
+  },
+  {
+    topic: "👁️ Penyakit Mata - Bayi",
+    q: "Penyakit mata yang sering terjadi pada bayi baru lahir adalah...",
+    opts: [
+      "Glaukoma kongenital",
+      "Oftalmia neonatorum (konjungtivitis gonore pada bayi baru lahir)",
+      "Retinopati diabetik",
+      "Ablasio retina"
+    ],
+    ans: 1,
+    exp: "✅ Benar! Oftalmia Neonatorum adalah infeksi konjungtiva pada bayi baru lahir yang terjadi dalam 28 hari pertama kehidupan, paling sering disebabkan oleh Neisseria gonorrhoeae yang ditularkan saat proses persalinan.",
+    fact: "💡 Untuk mencegahnya, tetes mata profilaksis (seperti Eritromisin 0,5% atau Tetrasiklin 1%) diberikan pada semua bayi baru lahir — ini adalah standar pelayanan persalinan!"
+  },
+  {
+    topic: "👁️ Penyakit Mata Menular",
+    q: "Yang TERMASUK golongan penyakit mata menular adalah...",
+    opts: [
+      "Glaukoma, katarak, dan presbiopi",
+      "Konjungtivitis, trakoma, dan gonoblenorhoe",
+      "Miopia, hipermetropia, dan astigmatisme",
+      "Retinopati, neuritis optik, dan ambliopia"
+    ],
+    ans: 1,
+    exp: "✅ Benar! Konjungtivitis (peradangan selaput bening mata), Trakoma (akibat Chlamydia trachomatis), dan Gonoblenorhoe (akibat Neisseria gonorrhoeae) adalah penyakit mata yang bersifat menular.",
+    fact: "💡 Ingat rumusnya: Penyakit mata MENULAR = disebabkan kuman/virus. Penyakit mata TIDAK menular = gangguan refraksi seperti rabun jauh, rabun dekat, dll."
+  },
+  {
+    topic: "👁️ Penyakit Mata - Virus",
+    q: "Penyakit mata yang disebabkan oleh VIRUS adalah...",
+    opts: [
+      "Trakoma (disebabkan Chlamydia)",
+      "Gonoblenorhoe (disebabkan Gonokokus)",
+      "Konjungtivitis viral / belekan virus (misalnya Adenovirus)",
+      "Selulitis orbita (disebabkan bakteri)"
+    ],
+    ans: 2,
+    exp: "✅ Benar! Konjungtivitis viral disebabkan oleh virus, paling umum Adenovirus. Tanda khasnya: mata merah, berair, terasa mengganjal, sangat menular melalui kontak langsung atau benda tercemar.",
+    fact: "💡 Bedain yuk! Trakoma → Chlamydia trachomatis (bakteri intraseluler). Gonoblenorhoe → Neisseria gonorrhoeae (bakteri). Konjungtivitis viral → Adenovirus/Herpes (virus)."
+  },
+  {
+    topic: "👁️ Rabun Senja",
+    q: "Rabun senja merupakan istilah populer dari penyakit mata...",
+    opts: [
+      "Glaukoma",
+      "Keratomalasia",
+      "Xeroftalmia / Hemeralopia (Nyctalopia)",
+      "Katarak"
+    ],
+    ans: 2,
+    exp: "✅ Benar! Rabun senja atau buta ayam adalah istilah populer dari Nyctalopia/Hemeralopia, yaitu ketidakmampuan melihat dalam kondisi cahaya redup. Ini adalah TANDA AWAL kekurangan Vitamin A!",
+    fact: "💡 Xeroftalmia adalah istilah payung untuk semua gangguan mata akibat kekurangan Vitamin A, mulai dari rabun senja → xerosis konjungtiva → bercak Bitot → ulkus kornea → kebutaan permanen!"
+  },
+  {
+    topic: "🦷 Karies Gigi",
+    q: "Penyakit karies dentis (gigi berlubang) merupakan penyakit yang tersebar luas, terutama pada anak usia...",
+    opts: [
+      "0–2 tahun",
+      "6–12 tahun (usia sekolah dasar)",
+      "15–20 tahun",
+      "Dewasa di atas 30 tahun"
+    ],
+    ans: 1,
+    exp: "✅ Benar! Karies dentis paling banyak menyerang anak usia 6–12 tahun (usia SD) karena gigi susu mulai diganti gigi permanen, kebiasaan makan manis tinggi, dan hygiene mulut yang belum optimal.",
+    fact: "💡 Karies disebabkan oleh bakteri Streptococcus mutans yang mengubah gula menjadi asam, lalu asam merusak email gigi. Makanya sikat gigi 2x sehari itu PENTING banget!"
+  },
+  {
+    topic: "🏫 UKS",
+    q: "Kegiatan UKS (Usaha Kesehatan Sekolah) di antaranya adalah...",
+    opts: [
+      "Hanya memberikan obat kepada siswa yang sakit",
+      "Pendidikan kesehatan, pelayanan kesehatan, dan pembinaan lingkungan sekolah sehat (TRIAS UKS)",
+      "Membangun puskesmas di lingkungan sekolah",
+      "Menyediakan dokter spesialis untuk siswa"
+    ],
+    ans: 1,
+    exp: "✅ Benar! Kegiatan UKS dikenal dengan TRIAS UKS, yaitu: (1) Pendidikan Kesehatan, (2) Pelayanan Kesehatan, dan (3) Pembinaan Lingkungan Sekolah Sehat.",
+    fact: "💡 TRIAS UKS = TIGA pilar utama. Mudah diingat: PeKa-PeLayanan-LingkunganSehat. UKS bukan cuma untuk yang sakit, tapi untuk menciptakan generasi sehat!"
+  },
+  {
+    topic: "💊 Vitamin A",
+    q: "Setiap bayi usia 6–11 bulan harus mendapat kapsul Vitamin A berwarna...",
+    opts: [
+      "Merah (dosis 200.000 IU)",
+      "Biru (dosis 100.000 IU)",
+      "Kuning (dosis 50.000 IU)",
+      "Hijau (dosis 150.000 IU)"
+    ],
+    ans: 1,
+    exp: "✅ Benar! Bayi 6–11 bulan mendapat kapsul Vitamin A BIRU berisi 100.000 IU, diberikan 1 kapsul. Diberikan setiap Februari dan Agustus (Bulan Vitamin A).",
+    fact: "💡 Cara mudah ingat: BIRU = BAyi (kecil, dosis lebih rendah). MERAH = anak yang lebih besar (1–5 tahun, dosis 200.000 IU). Bayangkan: bayi pakai baju BIRU!"
+  },
+  {
+    topic: "👁️ Gonoblenorhoe",
+    q: "Pengertian dari penyakit Gonoblenorhoe (Ophthalmia Gonorrhoica) adalah...",
+    opts: [
+      "Peradangan kornea akibat kekurangan vitamin A",
+      "Infeksi/peradangan konjungtiva yang disebabkan oleh bakteri Neisseria gonorrhoeae",
+      "Penyakit mata akibat virus herpes",
+      "Gangguan penglihatan karena tekanan bola mata tinggi"
+    ],
+    ans: 1,
+    exp: "✅ Benar! Gonoblenorhoe adalah infeksi konjungtiva yang disebabkan oleh Neisseria gonorrhoeae (bakteri penyebab gonore). Ditandai dengan sekret purulen (nanah) yang sangat banyak dan bisa menyebabkan kebutaan jika tidak diobati.",
+    fact: "💡 Gonoblenorhoe pada bayi baru lahir disebut Oftalmia Neonatorum — ditularkan dari ibu saat persalinan. Inilah mengapa tetes mata profilaksis wajib diberikan saat lahir!"
+  },
+  {
+    topic: "👁️ Trakoma",
+    q: "Trakoma adalah...",
+    opts: [
+      "Penyakit mata akibat kekurangan Vitamin A, menyebabkan mata kering",
+      "Infeksi mata kronis akibat Chlamydia trachomatis, yang dapat menyebabkan kebutaan permanen",
+      "Peradangan saraf optik akibat infeksi virus",
+      "Penyakit mata keturunan yang menyebabkan buta warna"
+    ],
+    ans: 1,
+    exp: "✅ Benar! Trakoma adalah infeksi mata kronis yang disebabkan oleh Chlamydia trachomatis. Ini adalah penyebab kebutaan yang dapat dicegah terbesar di dunia! Ditandai dengan bintil-bintil (folikel) pada konjungtiva.",
+    fact: "💡 Trakoma endemis di daerah miskin dengan sanitasi buruk. Penularannya melalui kontak langsung atau lalat. WHO menargetkan eliminasi trakoma secara global dengan strategi SAFE (Surgery, Antibiotics, Face washing, Environmental improvement)."
+  },
+  {
+    topic: "👁️ Xeroftalmia",
+    q: "Pengertian dari Xeroftalmia adalah...",
+    opts: [
+      "Peradangan kelopak mata akibat infeksi bakteri",
+      "Semua kelainan mata akibat kekurangan Vitamin A, mulai dari rabun senja hingga kebutaan",
+      "Gangguan penglihatan akibat tekanan bola mata yang meningkat",
+      "Infeksi virus pada retina yang menyebabkan kebutaan mendadak"
+    ],
+    ans: 1,
+    exp: "✅ Benar! Xeroftalmia (dari bahasa Yunani: xeros = kering, ophthalmos = mata) adalah kondisi mata kering dan semua spektrum kelainan mata akibat defisiensi Vitamin A.",
+    fact: "💡 Tahapan Xeroftalmia: XN (Rabun senja) → X1A (Xerosis konjungtiva) → X1B (Bercak Bitot) → X2 (Xerosis kornea) → X3A (Ulkus kornea) → X3B (Keratomalasia) → XS (Sikatrik kornea) → XF (Fundus Xeroftalmia). Makin parah makin susah disembuhkan!"
+  },
+  {
+    topic: "💊 Vitamin A - Balita",
+    q: "Setiap balita usia 1–5 tahun mendapat kapsul Vitamin A berwarna...",
+    opts: [
+      "Biru (100.000 IU)",
+      "Kuning (50.000 IU)",
+      "Merah (200.000 IU)",
+      "Hijau (150.000 IU)"
+    ],
+    ans: 2,
+    exp: "✅ Benar! Balita usia 1–5 tahun mendapat kapsul Vitamin A MERAH berisi 200.000 IU, diberikan 2 kali setahun (Februari dan Agustus).",
+    fact: "💡 Tips hafal: MERAH = BALITA (1-5 tahun) = 200.000 IU. BIRU = BAYI (6-11 bulan) = 100.000 IU. Ibu nifas juga dapat kapsul MERAH 200.000 IU sebanyak 2 kapsul!"
+  },
+  {
+    topic: "🚿 Cuci Tangan",
+    q: "Cara mencuci tangan yang baik menurut WHO — manakah yang BUKAN termasuk langkahnya?",
+    opts: [
+      "Basahi tangan dengan air mengalir, lalu tuangkan sabun",
+      "Gosok sela-sela jari dan bersihkan kuku",
+      "Cukup mengelap tangan dengan tisu basah tanpa sabun (pengganti cuci tangan)",
+      "Bilas dengan air mengalir hingga bersih dan keringkan"
+    ],
+    ans: 2,
+    exp: "✅ Benar! Mengelap tangan dengan tisu basah BUKAN pengganti cuci tangan yang benar. Cuci tangan pakai sabun dan air mengalir WAJIB dilakukan minimal 20 detik untuk efektif membunuh kuman.",
+    fact: "💡 6 langkah cuci tangan WHO: (1) Gosok telapak, (2) Gosok punggung tangan, (3) Sela-sela jari, (4) Kunci jari, (5) Ibu jari, (6) Ujung kuku. Lakukan minimal 20 detik = saat menyanyikan 'Selamat Ulang Tahun' 2x!"
+  },
+  {
+    topic: "🦷 Pasta Gigi & Fluorida",
+    q: "Manfaat fluorida pada pasta gigi — manakah yang BUKAN manfaatnya?",
+    opts: [
+      "Memperkuat email gigi (enamel) agar tahan terhadap asam",
+      "Membantu remineralisasi gigi yang mulai rusak",
+      "Menggantikan fungsi sikat gigi sepenuhnya",
+      "Mencegah pertumbuhan bakteri penyebab karies (Streptococcus mutans)"
+    ],
+    ans: 2,
+    exp: "✅ Benar! Fluorida TIDAK bisa menggantikan fungsi sikat gigi. Fluorida bekerja memperkuat enamel dan mencegah karies, tetapi plak dan sisa makanan tetap harus dibersihkan secara mekanik dengan menyikat gigi.",
+    fact: "💡 Fluorida bekerja dengan: (1) Membentuk fluorapatit yang lebih keras dari hidroksiapatit, (2) Menghambat enzim bakteri penghasil asam, (3) Mendorong remineralisasi. Tapi ingat: fluorida berlebihan bisa menyebabkan fluorosis (bercak putih/coklat di gigi)!"
+  },
+  {
+    topic: "🏘️ BKIA",
+    q: "Tujuan BKIA (Balai Kesehatan Ibu dan Anak) — manakah yang BUKAN tujuannya?",
+    opts: [
+      "Menurunkan angka kematian ibu dan bayi",
+      "Meningkatkan kesehatan ibu hamil, bersalin, dan nifas",
+      "Menggantikan peran rumah sakit untuk operasi besar",
+      "Memberikan pelayanan KB dan imunisasi dasar"
+    ],
+    ans: 2,
+    exp: "✅ Benar! BKIA TIDAK berfungsi menggantikan peran rumah sakit untuk operasi besar. BKIA adalah fasilitas primer yang fokus pada pelayanan ibu dan anak, bukan bedah.",
+    fact: "💡 BKIA memberikan layanan: ANC (Antenatal Care), imunisasi, KB, gizi ibu dan anak, serta konseling. Untuk tindakan operatif, pasien dirujuk ke rumah sakit!"
+  },
+  {
+    topic: "🤝 KB Hormonal",
+    q: "Metode KB hormonal — manakah yang BUKAN termasuk metode KB hormonal?",
+    opts: [
+      "Pil KB (oral kontrasepsi)",
+      "Suntik KB (1 bulan / 3 bulan)",
+      "Implan/Susuk KB",
+      "Kondom"
+    ],
+    ans: 3,
+    exp: "✅ Benar! Kondom adalah metode KB BARRIER (penghalang), bukan hormonal. KB hormonal bekerja dengan menggunakan hormon sintetis (estrogen dan/atau progesteron) untuk mencegah kehamilan.",
+    fact: "💡 KB Hormonal meliputi: Pil (estrogen+progesteron atau progesteron saja), Suntik (1 bulan/3 bulan), Implan (3-5 tahun), IUD hormonal (Mirena). Cara kerja utamanya: mencegah ovulasi, mengentalkan lendir serviks, menipiskan endometrium."
+  },
+  {
+    topic: "💉 Imunisasi Bayi",
+    q: "Vaksin yang diberikan kepada bayi dalam program imunisasi dasar — manakah yang BUKAN termasuk vaksin untuk bayi?",
+    opts: [
+      "BCG (untuk TBC)",
+      "DPT (Difteri, Pertusis, Tetanus)",
+      "Vaksin Rabies rutin",
+      "Polio"
+    ],
+    ans: 2,
+    exp: "✅ Benar! Vaksin Rabies TIDAK termasuk imunisasi dasar rutin untuk bayi. Vaksin rabies diberikan hanya bila ada paparan/gigitan hewan berisiko. Imunisasi dasar rutin: BCG, Hepatitis B, DPT, Polio, Campak/MR.",
+    fact: "💡 Jadwal imunisasi dasar: Lahir (HB0, Polio 0), 1 bln (BCG, Polio 1), 2 bln (DPT-HB-Hib 1, Polio 2), 3 bln (DPT-HB-Hib 2, Polio 3), 4 bln (DPT-HB-Hib 3, Polio 4, IPV), 9 bln (Campak/MR)."
+  },
+  {
+    topic: "🤝 Vasektomi",
+    q: "Vasektomi adalah metode KB dengan cara...",
+    opts: [
+      "Memotong/mengikat saluran telur (tuba falopi) pada wanita",
+      "Memasang alat dalam rahim (IUD) untuk mencegah pembuahan",
+      "Memotong/mengikat saluran sperma (vas deferens) pada pria sehingga sperma tidak bisa keluar",
+      "Menyuntikkan hormon pada pria untuk menghambat produksi sperma"
+    ],
+    ans: 2,
+    exp: "✅ Benar! Vasektomi adalah operasi kecil pada PRIA dengan memotong/mengikat/memblokir vas deferens (saluran sperma), sehingga sperma tidak bisa bercampur dengan air mani.",
+    fact: "💡 Bedain! Vasektomi = pria (VAsektomi = VAn/laki). Tubektomi = wanita (TUbektomi = TUba falopi). Keduanya termasuk KB Mantap (MKJP = Metode Kontrasepsi Jangka Panjang) yang bersifat permanen!"
+  },
+  {
+    topic: "🤝 Sejarah KB Indonesia",
+    q: "Pada tahun berapakah program KB (Keluarga Berencana) mulai diterapkan secara resmi di Indonesia?",
+    opts: [
+      "Tahun 1957",
+      "Tahun 1968",
+      "Tahun 1970",
+      "Tahun 1975"
+    ],
+    ans: 1,
+    exp: "✅ Benar! Program KB secara resmi dimulai di Indonesia pada tahun 1968 dengan berdirinya LKBN (Lembaga Keluarga Berencana Nasional), yang kemudian berkembang menjadi BKKBN (Badan Koordinasi Keluarga Berencana Nasional) pada tahun 1970.",
+    fact: "💡 Sejarah KB Indonesia: 1957 - PKBI (Perkumpulan Keluarga Berencana Indonesia) berdiri. 1968 - LKBN dibentuk. 1970 - BKKBN dibentuk. Program KB sukses menurunkan TFR (Total Fertility Rate) Indonesia dari 5,6 (1970) menjadi 2,4 (2022)!"
+  }
+];
+
+let current = 0;
+let score = 0;
+let answered = [];
+let userAnswers = [];
+
+function startQuiz() {
+  document.getElementById('introScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[current];
+  const pct = ((current) / questions.length * 100) + 5;
+  document.getElementById('progressText').textContent = `${current+1}/${questions.length}`;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('scoreText').textContent = score;
+
+  const letters = ['A','B','C','D'];
+  let optionsHTML = q.opts.map((o, i) => `
+    <button class="option-btn" onclick="selectAnswer(${i})" id="opt${i}">
+      <span class="option-letter">${letters[i]}</span>
+      <span>${o}</span>
+    </button>
+  `).join('');
+
+  document.getElementById('questionContainer').innerHTML = `
+    <div class="topic-label">${q.topic}</div>
+    <div class="card">
+      <div class="question-number">Soal ${current+1} dari ${questions.length}</div>
+      <div class="question-text">${q.q}</div>
+      <div class="options">${optionsHTML}</div>
+      <div class="explanation" id="explanation"></div>
+      <div class="fact-box" id="factBox">
+        <div class="fact-title">📖 Info Tambahan</div>
+        <div id="factText"></div>
+      </div>
+      <button class="next-btn" id="nextBtn" onclick="nextQuestion()">
+        ${current < questions.length - 1 ? 'Soal Berikutnya →' : 'Lihat Hasil 🎯'}
+      </button>
+    </div>
+  `;
+}
+
+function selectAnswer(idx) {
+  const q = questions[current];
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => b.disabled = true);
+
+  const expEl = document.getElementById('explanation');
+  const factEl = document.getElementById('factBox');
+  const factText = document.getElementById('factText');
+
+  userAnswers[current] = idx;
+
+  if (idx === q.ans) {
+    score++;
+    document.getElementById('scoreText').textContent = score;
+    btns[idx].classList.add('correct');
+    expEl.className = 'explanation correct';
+    expEl.innerHTML = q.exp;
+  } else {
+    btns[idx].classList.add('wrong');
+    btns[q.ans].classList.add('correct');
+    expEl.className = 'explanation wrong';
+    expEl.innerHTML = `❌ Kurang tepat. Jawaban yang benar adalah pilihan ${['A','B','C','D'][q.ans]}. <br><br>${q.exp}`;
+  }
+
+  factText.textContent = q.fact;
+  factEl.classList.add('show');
+  document.getElementById('nextBtn').classList.add('show');
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= questions.length) {
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResult() {
+  document.getElementById('quizScreen').style.display = 'none';
+  const resultEl = document.getElementById('resultScreen');
+  resultEl.classList.add('show');
+
+  const pct = Math.round(score / questions.length * 100);
+  document.getElementById('resultScore').textContent = `${score}/${questions.length}`;
+
+  let emoji, title, msg;
+  if (pct >= 90) {
+    emoji = '🏆'; title = 'Luar Biasa!';
+    msg = `Nilai kamu ${pct}%! Kamu sudah menguasai materi MPP Farmasi dengan sangat baik. Semoga ujiannya lancar dan hasilnya memuaskan! 🌟`;
+  } else if (pct >= 75) {
+    emoji = '🎉'; title = 'Bagus Sekali!';
+    msg = `Nilai kamu ${pct}%! Pemahaman kamu sudah baik. Review sedikit soal yang salah, dan kamu siap menghadapi ujian! 💪`;
+  } else if (pct >= 60) {
+    emoji = '📚'; title = 'Hampir Sampai!';
+    msg = `Nilai kamu ${pct}%. Kamu perlu sedikit lebih banyak belajar. Perhatikan penjelasan di setiap soal dan coba lagi! 🔄`;
+  } else {
+    emoji = '💡'; title = 'Ayo Semangat!';
+    msg = `Nilai kamu ${pct}%. Jangan menyerah! Baca lagi penjelasannya, dan ulangi kuis ini. Kamu pasti bisa! 🌈`;
+  }
+
+  document.getElementById('resultEmoji').textContent = emoji;
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultSub').textContent = `${pct}% — ${score} dari ${questions.length} soal benar`;
+  document.getElementById('resultMessage').textContent = msg;
+
+  // Review
+  let reviewHTML = '<div style="font-weight:800;font-size:14px;margin-bottom:10px;color:#2d3436;">📋 Rekap Jawaban:</div>';
+  questions.forEach((q, i) => {
+    const ok = userAnswers[i] === q.ans;
+    reviewHTML += `
+      <div class="review-item ${ok ? 'ok' : 'no'}">
+        <span>${ok ? '✅' : '❌'}</span>
+        <span><strong>Soal ${i+1}:</strong> ${q.q.substring(0, 60)}${q.q.length > 60 ? '...' : ''}</span>
+      </div>`;
+  });
+  document.getElementById('reviewList').innerHTML = reviewHTML;
+}
+
+function restartQuiz() {
+  current = 0; score = 0; userAnswers = [];
+  document.getElementById('resultScreen').classList.remove('show');
+  document.getElementById('quizScreen').style.display = 'block';
+  renderQuestion();
+}
+</script>
+</body>
+</html>
